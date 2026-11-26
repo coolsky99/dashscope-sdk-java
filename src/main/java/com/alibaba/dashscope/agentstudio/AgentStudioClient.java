@@ -4,6 +4,7 @@ package com.alibaba.dashscope.agentstudio;
 import com.alibaba.dashscope.agentstudio.resource.Agents;
 import com.alibaba.dashscope.agentstudio.resource.DeploymentRuns;
 import com.alibaba.dashscope.agentstudio.resource.Deployments;
+import com.alibaba.dashscope.agentstudio.resource.DynamicWorkflows;
 import com.alibaba.dashscope.agentstudio.resource.Environments;
 import com.alibaba.dashscope.agentstudio.resource.Files;
 import com.alibaba.dashscope.agentstudio.resource.MemoryStores;
@@ -54,6 +55,7 @@ public class AgentStudioClient implements Closeable {
     this.baseUrl = resolveBaseUrl(baseUrl, workspace, region);
     this.agents = new Agents(this.baseUrl, connectionOptions, apiKey);
     this.deployments = new Deployments(this.baseUrl, connectionOptions, apiKey);
+    this.dynamicWorkflows = new DynamicWorkflows(this.baseUrl, connectionOptions, apiKey);
     this.deploymentRuns = new DeploymentRuns(this.baseUrl, connectionOptions, apiKey);
     this.sessions = new Sessions(this.baseUrl, connectionOptions, apiKey);
     this.environments = new Environments(this.baseUrl, connectionOptions, apiKey);
@@ -111,6 +113,10 @@ public class AgentStudioClient implements Closeable {
     return agents;
   }
 
+  public DynamicWorkflows dynamicWorkflows() {
+    return dynamicWorkflows;
+  }
+
   public Deployments deployments() {
     return deployments;
   }
@@ -162,6 +168,8 @@ public class AgentStudioClient implements Closeable {
   public <T> CompletableFuture<T> async(Supplier<T> supplier) {
     return CompletableFuture.supplyAsync(supplier);
   }
+
+  private final DynamicWorkflows dynamicWorkflows;
 
   @Override
   public void close() {

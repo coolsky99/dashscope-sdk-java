@@ -129,6 +129,12 @@ public final class Configs {
     @SerializedName("agents")
     private List<RosterEntry> agents;
 
+    @SerializedName("workflows")
+    private WorkflowConfig workflows;
+
+    @SerializedName("reuse_workflows")
+    private ReuseWorkflowsConfig reuseWorkflows;
+
     /**
      * One roster entry: {@code type} is {@code "agent"} (reference another agent by {@code id} plus
      * optional {@code version}) or {@code "self"} (a copy of the coordinator; at most one).
@@ -156,5 +162,55 @@ public final class Configs {
   public static class PermissionPolicy {
     @SerializedName("type")
     private String type;
+  }
+
+  /** Permission switch for creating or reusing Dynamic Workflows. */
+  public enum WorkflowPermissionType {
+    /** Allow the configured capability. */
+    @SerializedName("enabled")
+    ENABLED,
+    /** Disable the configured capability. */
+    @SerializedName("disabled")
+    DISABLED
+  }
+
+  /** Fixed Agent or Workflow version binding; only id and version are sent. */
+  @Data
+  public static class WorkflowResourceReference {
+    @SerializedName("id")
+    private String id;
+
+    @SerializedName("version")
+    private Integer version;
+  }
+
+  /** Permission to use the Session's default Agent in an inline Workflow. */
+  @Data
+  public static class WorkflowInlineAgentsConfig {
+    @SerializedName("type")
+    private WorkflowPermissionType type;
+  }
+
+  /** Inline script creation permissions; omitted settings retain server defaults. */
+  @Data
+  public static class WorkflowConfig {
+    @SerializedName("type")
+    private WorkflowPermissionType type;
+
+    @SerializedName("inline_agents")
+    private WorkflowInlineAgentsConfig inlineAgents;
+
+    @SerializedName("predefined_agents")
+    private List<WorkflowResourceReference> predefinedAgents;
+  }
+
+  /** Permission to reuse the listed fixed published Workflow versions. */
+  @Data
+  public static class ReuseWorkflowsConfig {
+    @SerializedName("type")
+    private WorkflowPermissionType type;
+
+    @SerializedName("workflows")
+    private List<WorkflowResourceReference> workflows;
   }
 }
